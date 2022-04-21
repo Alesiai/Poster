@@ -31,6 +31,7 @@
                 </Style>
             </DataGrid.Resources>
         </DataGrid>
+        <Button Click="Button_Click_1" Content="Обновить Таблицу" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Margin="0,0,101,0" Cursor="Hand"/>
         <Button Click="Button_Click"  Content="Добавить" HorizontalAlignment="Right"  VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

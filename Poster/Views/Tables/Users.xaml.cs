@@ -15,7 +15,7 @@ namespace Poster.Views.Tables
         public Users()
         {
             InitializeComponent();
-            DataGridXAML.ItemsSource = Seed.getListOfUser();
+            DataGridXAML.ItemsSource = Seed.getListOfUsers();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -43,6 +43,11 @@ namespace Poster.Views.Tables
                 taskWindow.Show();
             }
             catch { }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            DataGridXAML.ItemsSource = Seed.getListOfUsers();
         }
     }
 }

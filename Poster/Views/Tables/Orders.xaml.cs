@@ -28,13 +28,13 @@ namespace Poster.Views.Tables
         {
             InitializeComponent();
             Seed.getListOfItem();
-            Seed.getListOfUser();
-            DataGridXAML.ItemsSource = Seed.getListOfOrders();
+            Seed.getListOfUsers();
+            DataGridXAML.ItemsSource = Seed.getListOfOrders(DateTime.Today);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            AddOrder taskWindow = new AddOrder(new Order { Id = Seed.getListOfOrders().Count()+1});
+            AddOrder taskWindow = new AddOrder(new Order { Id = Seed.getListOfOrders().Count()+1}, true);
             taskWindow.Show();
         }
 
@@ -53,10 +53,15 @@ namespace Poster.Views.Tables
         {
             try
             {
-                AddOrder taskWindow = new AddOrder(row);
+                AddOrder taskWindow = new AddOrder(row, false);
                 taskWindow.Show();
             }
             catch { }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            DataGridXAML.ItemsSource = Seed.getListOfOrders();
         }
     }
 }

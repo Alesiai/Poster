@@ -20,7 +20,7 @@ namespace Poster.Entities
                 Name = "Катя",
                 Login = "user",
                 Password = "1111",
-                 DateOfBirth = Convert.ToDateTime("12.02.2002")
+                DateOfBirth = Convert.ToDateTime("12.02.2002")
             });
 
             listOfUsers.Add(new User
@@ -58,13 +58,15 @@ namespace Poster.Entities
 
             listOfItemsInOrder.Add(new ItemsInOrder
             {
+                Id = 1,
                 Item = listOfItems[0],
-                OrderID = 0,
+                OrderID = 1,
                 Count = 2,
             });
 
             listOfItemsInOrder.Add(new ItemsInOrder
             {
+                Id = 2,
                 Item = listOfItems[1],
                 OrderID = 1,
                 Count = 1,
@@ -72,10 +74,11 @@ namespace Poster.Entities
 
             listOfItemsInOrder.Add(new ItemsInOrder
             {
+                Id = 3,
                 Item = listOfItems[2],
                 OrderID = 2,
                 Count = 2,
-            });
+            }); ;
 
             var orderFirst = new Order
             {
@@ -94,9 +97,18 @@ namespace Poster.Entities
                 User = listOfUsers.Where(x => x.Id == 1).First(),
             };
             listOfOrders.Add(orderSecond);
+
+            var third = new Order
+            {
+                Cost = getCost(2),
+                Id = 2,
+                Created = DateTime.Now.AddDays(1),
+                User = listOfUsers.Where(x => x.Id == 1).First(),
+            };
+            listOfOrders.Add(third);
         }
 
-        public static List<User> getListOfUser()
+        public static List<User> getListOfUsers()
         {
             return listOfUsers.Where(x => x.IsDeleted == false).ToList();
         }
@@ -106,9 +118,13 @@ namespace Poster.Entities
             return listOfItems.Where(x => x.IsDeleted == false).ToList();
         }
 
+        public static List<Order> getListOfOrders(DateTime dateTime)
+        {
+            return listOfOrders.Where(x=>x.IsDeleted==false && x.Created >= dateTime && x.Created <= dateTime.AddDays(1)).ToList();
+        }
         public static List<Order> getListOfOrders()
         {
-            return listOfOrders.ToList();
+            return listOfOrders.Where(x => x.IsDeleted == false).ToList();
         }
 
         public static List<ItemsInOrder> getListOfItemsInOrderById(int orderId)
@@ -120,12 +136,12 @@ namespace Poster.Entities
         {
             return listOfUsers.Where(x => x.Login == login && !x.IsDeleted).FirstOrDefault();
         }
-        
+
         public static User GetUser(int userId)
         {
             return listOfUsers.Where(x => x.Id == userId).FirstOrDefault();
         }
-        
+
         public static Item GetItem(int itemId)
         {
             return listOfItems.Where(x => x.Id == itemId).FirstOrDefault();
@@ -142,7 +158,7 @@ namespace Poster.Entities
                 Phone = phone,
                 DateOfBirth = dateOfBirth,
                 Status = status == "" ? "user" : status
-            }) ;
+            });
         }
 
         public static void addItem(string name, double cost)
@@ -153,6 +169,16 @@ namespace Poster.Entities
                 Cost = cost,
                 Name = name,
             });
+        }
+
+        public static void addItemToItemsInOrderList(ItemsInOrder itemsInOrder)
+        {
+            listOfItemsInOrder.Add(itemsInOrder);
+        }
+
+        public static void addOrder(Order order)
+        {
+            listOfOrders.Add(order);
         }
 
         public static void updateItem(int itemId, string cost, string name)
@@ -183,6 +209,19 @@ namespace Poster.Entities
             }
         }
 
+        public static void updateOrder(Order order)
+        {
+            foreach(var item in listOfOrders)
+            {
+                if (item.Id == order.Id)
+                {
+                    item.Discount = Convert.ToDouble(order.Discount);
+                    item.Cost = order.Cost;
+                    item.User = order.User;
+                }
+            }
+        }
+        
         public static void deleteItem(int itemId)
         {
             foreach (var item in listOfItems)
@@ -194,19 +233,41 @@ namespace Poster.Entities
                 }
             }
         }
-        
+
         public static void deleteUser(int userId)
         {
             foreach (var user in listOfUsers)
             {
-                if(user.Id == userId)
+                if (user.Id == userId)
                 {
                     user.Name += " DELETED";
                     user.IsDeleted = true;
                 }
             }
         }
+
+        public static void deleteItemFromListOfItem(int? id)
+        {
+            ItemsInOrder? item = listOfItemsInOrder.Where(x => x.Id == id).FirstOrDefault();
+            if (item != null) listOfItemsInOrder.Remove(item);
+        }
+
+        public static void deleteOrder(Order order)
+        {
+            foreach (var item in listOfOrders)
+            {
+                if(item.Id == order.Id)
+                {
+                    order.IsDeleted = true;
+                }
+            }
+        }
+
+        public static double getCost(int id) => Math.Round(listOfItemsInOrder.Where(x => x.OrderID == id).Sum(x => x.Item.Cost * x.Count), 2);
         
-        private static double getCost(int id) => Math.Round(listOfItemsInOrder.Where(x => x.OrderID == id).Sum(x => x.Item.Cost * x.Count), 2);
+        public static int getIdForItemsInOrder()
+        {
+            return listOfItemsInOrder.Count+1;
+        }
     }
 }

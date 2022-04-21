@@ -9,6 +9,7 @@ namespace Poster
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static User User { get; set; }
         public bool times = true;
         public MainWindow()
         {
@@ -30,6 +31,7 @@ namespace Poster
                 if (user.Password == PasswordBox.Password.ToString())
                 {
                     Views.Poster NewWindow = new Views.Poster(user);
+                    User = user;
                     NewWindow.Show();
                     Close();
                 }

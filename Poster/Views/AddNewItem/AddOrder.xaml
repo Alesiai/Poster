@@ -5,9 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:Poster.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Orders"
+      mc:Ignorable="d" d:DesignWidth="800"
+      Title="Orders" Height="528"
       >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid HorizontalAlignment="Left" Grid.Column="0">
             <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide">
-                <ListBox x:Name="ProductList" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+                <ListBox x:Name="ProductList" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" SelectionChanged="ProductList_SelectionChanged" MouseDoubleClick="ProductList_MouseDoubleClick">
                     <ListBox.ItemTemplate>
                         <DataTemplate >
                             <Border CornerRadius="6" BorderThickness="2" DockPanel.Dock="Top" Cursor="Hand" BorderBrush="#FF2962FF" >
@@ -44,28 +43,67 @@
             </materialDesign:TransitioningContent>
         </Grid>
         <Grid Grid.Column="1">
-            <DataGrid
-            IsReadOnly="True"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
             CanUserAddRows="False"
             SelectionMode="Extended"
-            x:Name="DataGridXAML"  Margin="0,0,0,162"  AutoGenerateColumns="False">
+            x:Name="DataGridXAML" AutoGenerateColumns="False" SelectionChanged="DataGridXAML_SelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Path=Item.Name}"/>
-                    <DataGridTextColumn Header="Количество" Width="*" Binding="{Binding Path=Count}"/>
-                    <DataGridTextColumn Header="Цена" Width="*" Binding="{Binding Path=Item.Cost}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Название" Width="*" Binding="{Binding Path=Item.Name}"/>
+                    <DataGridTextColumn IsReadOnly="False" Header="Количество" Width="*" Binding="{Binding Path=Count}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Цена" Width="*" Binding="{Binding Path=Item.Cost}"/>
                 </DataGrid.Columns>
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseLeave" Handler="DataGridRow_MouseLeave"/>
+                    </Style>
+                </DataGrid.Resources>
             </DataGrid>
-            <Button Margin="0,0,5,125" Content="Изменить" HorizontalAlignment="Right"  VerticalAlignment="Bottom"/>
-            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,50" RenderTransformOrigin="0.5,0.5" 
+            <Button Grid.Row="1" Click="Button_Click" Content="Удалить" Margin="0,0,5,5" HorizontalAlignment="Right"  VerticalAlignment="Bottom"/>
+            
+            <TextBlock Grid.Row="3" Style="{StaticResource MaterialDesignHeadline5TextBlock}" RenderTransformOrigin="0.5,0.5" 
                        Text="Итого" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,82" RenderTransformOrigin="0.5,0.5" 
+            <TextBlock  Grid.Row="4"  Style="{StaticResource MaterialDesignHeadline5TextBlock}" RenderTransformOrigin="0.5,0.5" 
                 Text="Скидка" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,50" RenderTransformOrigin="0.5,0.5" 
+            <TextBlock Grid.Row="3" Style="{StaticResource MaterialDesignHeadline5TextBlock}" RenderTransformOrigin="0.5,0.5" 
                 VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="CostTextBlock"/>
-            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,82" RenderTransformOrigin="0.5,0.5" 
+            <TextBlock  Grid.Row="4"  Style="{StaticResource MaterialDesignHeadline5TextBlock}" RenderTransformOrigin="0.5,0.5" 
                 VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="DiscountTextBlock"/>
-            <Button Margin="0,0,120,5" Content="Скидка" HorizontalAlignment="Right"  VerticalAlignment="Bottom"/>
-            <Button Margin="0,0,5,5" Content="Сохранить" HorizontalAlignment="Right"  VerticalAlignment="Bottom"/>
+            
+            <TextBlock  Grid.Row="2"  Style="{StaticResource MaterialDesignHeadline5TextBlock}" RenderTransformOrigin="0.5,0.5" 
+                Text="Значение скидки" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            
+            <RadioButton Grid.Row="2"
+                  Margin="0 0 150 0"
+                  IsChecked="True" 
+                  HorizontalAlignment="Right"
+                  Style="{DynamicResource MaterialDesignUserForegroundRadioButton}"
+                  Content="0%" Checked="RadioButton_Checked" />
+            <RadioButton Grid.Row="2" Grid.Column="1"
+                  Margin="0 0 100 0" 
+                  HorizontalAlignment="Right"
+                  Style="{DynamicResource MaterialDesignUserForegroundRadioButton}"
+                  Content="10%" Checked="RadioButton_Checked" />
+            <RadioButton Grid.Row="2" Grid.Column="1"
+                         HorizontalAlignment="Right"
+                  Margin="0 0 50 0" Checked="RadioButton_Checked"
+                  Style="{DynamicResource MaterialDesignUserForegroundRadioButton}"
+                  Content="20%" />
+            <RadioButton Grid.Row="2" Grid.Column="1"
+                         HorizontalAlignment="Right"
+                  Margin="0 0 0 0" Checked="RadioButton_Checked"
+                  Content="100%" />
+            <Button Grid.Row="5"  Margin="0,0,120,5" Content="Удалить" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="Button_Click_2"/>
+            <Button Grid.Row="5"  Margin="0,0,5,5" Content="Сохранить" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="Button_Click_1"/>
         </Grid>
     </Grid>
 </Window>
